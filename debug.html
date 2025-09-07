@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Garage API</title>
+</head>
+<body>
+    <h1>Debug Garage API</h1>
+    <div id="output"></div>
+    <button onclick="testAPI()">Test API</button>
+
+    <script>
+        async function testAPI() {
+            const output = document.getElementById('output');
+            output.innerHTML = '<p>Testing...</p>';
+            
+            try {
+                console.log('Starting API test...');
+                
+                const baseUrl = 'https://garage-api.bako.global/mainnet';
+                const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(`${baseUrl}/collections?limit=5`);
+                
+                console.log('Base URL:', baseUrl);
+                console.log('Proxy URL:', proxyUrl);
+                output.innerHTML += `<p>Proxy URL: ${proxyUrl}</p>`;
+                
+                console.log('Making fetch request...');
+                const response = await fetch(proxyUrl);
+                console.log('Response received:', response);
+                output.innerHTML += `<p>Response status: ${response.status}</p>`;
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                console.log('Parsing JSON...');
+                const proxyData = await response.json();
+                console.log('Proxy data:', proxyData);
+                output.innerHTML += `<p>Proxy status: ${proxyData.status?.http_code || 'unknown'}</p>`;
+                
+                if (!proxyData.contents) {
+                    throw new Error('No contents in proxy response');
+                }
+                
+                console.log('Parsing API contents...');
+                const data = JSON.parse(proxyData.contents);
+                console.log('API data:', data);
+                
+                if (data.data && data.data.items) {
+                    console.log(`Found ${data.data.items.length} collections`);
+                    output.innerHTML += `<p>✅ Success! Found ${data.data.items.length} collections</p>`;
+                    output.innerHTML += `<h3>Collections:</h3>`;
+                    data.data.items.forEach(item => {
+                        output.innerHTML += `<p>- ${item.name || item.id}: Volume ${item.metrics?.volume || 0}</p>`;
+                    });
+                } else {
+                    output.innerHTML += `<p>❌ No items found in API response</p>`;
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                output.innerHTML += `<p>❌ Error: ${error.message}</p>`;
+            }
+        }
+        
+        // Auto-run on load
+        document.addEventListener('DOMContentLoaded', testAPI);
+    </script>
+</body>
+</html>
