@@ -22,9 +22,10 @@ class GarageAnalytics {
 
     async fetchCollectionData(collectionId) {
         try {
-            const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(`${this.baseUrl}/collections/${collectionId}`);
+            const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(`${this.baseUrl}/collections/${collectionId}`);
             const response = await fetch(proxyUrl);
-            const data = await response.json();
+            const proxyData = await response.json();
+            const data = JSON.parse(proxyData.contents);
             
             if (data.data) {
                 return {
@@ -43,16 +44,30 @@ class GarageAnalytics {
 
     async fetchAllCollections() {
         try {
-            const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(`${this.baseUrl}/collections?limit=50`);
-            const response = await fetch(proxyUrl);
-            const data = await response.json();
+            const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(`${this.baseUrl}/collections?limit=50`);
+            console.log('Fetching from:', proxyUrl);
             
-            console.log('API Response:', data); // Debug log
+            const response = await fetch(proxyUrl);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const proxyData = await response.json();
+            console.log('Proxy response:', proxyData);
+            
+            if (!proxyData.contents) {
+                throw new Error('No contents in proxy response');
+            }
+            
+            const data = JSON.parse(proxyData.contents);
+            console.log('Parsed API data:', data);
             
             // Handle the API response structure
             if (data.data && data.data.items) {
+                console.log(`Found ${data.data.items.length} collections`);
                 return data.data.items;
             }
+            console.log('No items found in API response');
             return [];
         } catch (error) {
             console.error('Error fetching all collections:', error);
