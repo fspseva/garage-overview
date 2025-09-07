@@ -2,7 +2,7 @@
 class GarageAnalytics {
     constructor() {
         // Use CORS proxy for GitHub Pages hosting
-        this.baseUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://garage-api.bako.global/mainnet');
+        this.baseUrl = 'https://garage-api.bako.global/mainnet';
         this.collections = {
             "0xcda69aa111eb386de9e2881e039e99bc43ac21f6951e3da9b71ae4450f67858d": "Mr. Jim",
             "0x33f6d2bf0762223229bc5b17cee8c1c0090be95dfd3ece5b63e8efb9e456ee21": "Bakteria",
@@ -22,7 +22,8 @@ class GarageAnalytics {
 
     async fetchCollectionData(collectionId) {
         try {
-            const response = await fetch(`${this.baseUrl}/collections/${collectionId}`);
+            const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(`${this.baseUrl}/collections/${collectionId}`);
+            const response = await fetch(proxyUrl);
             const data = await response.json();
             
             if (data.data) {
@@ -42,7 +43,8 @@ class GarageAnalytics {
 
     async fetchAllCollections() {
         try {
-            const response = await fetch(`${this.baseUrl}/collections?limit=50`);
+            const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(`${this.baseUrl}/collections?limit=50`);
+            const response = await fetch(proxyUrl);
             const data = await response.json();
             
             console.log('API Response:', data); // Debug log
