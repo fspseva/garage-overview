@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install)",
+      "Bash(npm run build:*)",
+      "Bash(npx shadcn@latest mcp init:*)",
+      "Bash(node server.js)",
+      "Bash(curl:*)",
+      "Bash(chmod:*)",
+      "Bash(npm start)",
+      "Bash(npx create-next-app@latest:*)",
+      "Bash(npx:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run dev:*)",
+      "Bash(git remote add:*)",
+      "Bash(git add:*)",
+      "Bash(git push:*)",
+      "Bash(git commit:*)",
+      "WebFetch(domain:fspseva.github.io)",
+      "Bash(pkill:*)"
+    ],
+    "deny": [],
+    "ask": []
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "shadcn"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "garage-nft-dashboard",
+  "version": "1.0.0",
+  "description": "Dynamic analytics dashboard for Garage NFT Marketplace",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "nft",
+    "marketplace", 
+    "analytics",
+    "fuel",
+    "dashboard",
+    "garage"
+  ],
+  "author": "Garage Team",
+  "license": "MIT"
+}
