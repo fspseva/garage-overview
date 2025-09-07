@@ -44,23 +44,14 @@ class GarageAnalytics {
 
     async fetchAllCollections() {
         try {
-            const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(`${this.baseUrl}/collections?limit=50`);
-            console.log('Fetching from:', proxyUrl);
-            
-            const response = await fetch(proxyUrl);
+            console.log('Fetching from static API data...');
+            const response = await fetch('./api-data.json');
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             
-            const proxyData = await response.json();
-            console.log('Proxy response:', proxyData);
-            
-            if (!proxyData.contents) {
-                throw new Error('No contents in proxy response');
-            }
-            
-            const data = JSON.parse(proxyData.contents);
-            console.log('Parsed API data:', data);
+            const data = await response.json();
+            console.log('Static API data:', data);
             
             // Handle the API response structure
             if (data.data && data.data.items) {
