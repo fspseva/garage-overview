@@ -76,9 +76,19 @@ class GarageAnalytics {
     }
 
     async loadData() {
+        console.log('Starting loadData...');
         try {
             // Fetch all collections data
+            console.log('Fetching all collections...');
             const allCollections = await this.fetchAllCollections();
+            console.log('Raw collections received:', allCollections);
+            
+            if (!allCollections || allCollections.length === 0) {
+                console.warn('No collections received from API');
+                this.showError('No data received from API. Please check your internet connection and try again.');
+                return;
+            }
+            
             this.collectionData = allCollections.map(collection => ({
                 ...collection,
                 name: this.collections[collection.id] || collection.name || collection.id.substring(0, 8) + '...',
@@ -90,16 +100,19 @@ class GarageAnalytics {
             // Sort by volume for better analytics
             this.collectionData.sort((a, b) => (b.volume || 0) - (a.volume || 0));
 
-            console.log('Loaded collection data:', this.collectionData);
+            console.log('Processed collection data:', this.collectionData);
+            console.log('Updating UI...');
             
             this.updateStats();
             this.updateCharts();
             this.updateRankings();
             this.updateLastUpdated();
             
+            console.log('UI update completed');
+            
         } catch (error) {
             console.error('Error loading data:', error);
-            this.showError('Failed to load marketplace data. Please try again.');
+            this.showError(`Failed to load marketplace data: ${error.message}. Please try again.`);
         }
     }
 
@@ -433,10 +446,17 @@ async function refreshData() {
 
 // Load data when page loads
 document.addEventListener('DOMContentLoaded', async () => {
-    await analytics.loadData();
+    console.log('DOM loaded, initializing analytics...');
+    try {
+        await analytics.loadData();
+        console.log('Initial data load completed');
+    } catch (error) {
+        console.error('Failed to load initial data:', error);
+    }
     
     // Auto-refresh every 5 minutes
     setInterval(() => {
-        analytics.loadData();
+        console.log('Auto-refresh triggered');
+        analytics.loadData().catch(err => console.error('Auto-refresh failed:', err));
     }, 5 * 60 * 1000);
 });
