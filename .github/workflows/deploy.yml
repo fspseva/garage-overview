@@ -38,9 +38,9 @@ jobs:
       
       - name: Copy dashboard files to root
         run: |
-          cp dashboard/index.html ./
-          cp dashboard/dashboard.js ./
-          cp dashboard/README.md ./dashboard-README.md
+          cp dashboard/index.html ./temp-index.html
+          # Use the root index.html and dashboard-static.js (already correct)
+          # cp dashboard/README.md ./dashboard-README.md
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
