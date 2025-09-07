@@ -45,7 +45,7 @@ class GarageAnalytics {
     async fetchAllCollections() {
         try {
             console.log('Fetching from static API data...');
-            const response = await fetch('./api-data.json');
+            const response = await fetch('/garage-overview/api-data.json');
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
